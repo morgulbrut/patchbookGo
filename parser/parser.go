@@ -26,14 +26,7 @@ func File(s []string) patch.Patch {
 		if strings.HasPrefix(line, CONN) {
 			p.Conns = append(p.Conns, connection(line))
 		}
+
 	}
 	return p
-}
-
-func connection(s string) patch.Connection {
-	var c patch.Connection
-	if strings.Contains(s, CONN_CV) {
-		c.Type = "CV"
-	}
-	return c
 }
