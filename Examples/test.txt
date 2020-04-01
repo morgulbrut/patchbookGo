@@ -16,10 +16,11 @@ VOICE 1:
 	- MultiLFO (LFO 3 Triangle) >> Z3000 (PWM)
 	* MultiLFO:
 	| LFO 1 Freq = 3.8
-	| LFO 1 Shape = Sine
-	| LFO 1 S&H = 0
-	| LFO 2 Freq = 1
+   | LFO 1 Shape = Sine
+| LFO 1 S&H = 0
+    | LFO 2 Freq = 1
 	| LFO 3 Freq = 1
+	* MultiLFO: | LFO 1 Freq = 3.8 | LFO 1 Shape = Sine | LFO 1 S&H = 0 | LFO 2 Freq = 1 | LFO 3 Freq = 1
 	* Tides: PLL Mode = True | Freq = 60% | Smoothness = 70%
 	* Z3000: Freq = 1pm
 	

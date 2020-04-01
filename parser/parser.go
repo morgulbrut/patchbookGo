@@ -15,6 +15,10 @@ const CONN_PITCH = "p>" //1v/oct or Hz/V
 const CONN_GATE = "g>"
 const CONN_TRIGGER = "g>"
 const CONN_CLOCK = "g>"
+const SETTINGS = "*"
+const SETTING = "|"
+const NAME_DEL = ":"
+const PARAM_DEL = "="
 
 func File(s []string) patch.Patch {
 	var p patch.Patch
@@ -26,7 +30,13 @@ func File(s []string) patch.Patch {
 		if strings.HasPrefix(line, CONN) {
 			p.Conns = append(p.Conns, connection(line))
 		}
-
+		if strings.HasPrefix(line, SETTINGS) {
+			p.Sets = append(p.Sets, settings(line))
+		}
+		if strings.HasPrefix(line, SETTING) {
+			pos := len(p.Sets) - 1
+			p.Sets[pos].Sets = append(p.Sets[pos].Sets, setting(line))
+		}
 	}
 	return p
 }
