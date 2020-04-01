@@ -23,12 +23,15 @@ func main() {
 	}
 	s := string(buf)
 
-	fmt.Println(s)
-	fmt.Println("---------------------")
+	//fmt.Println(s)
+	//fmt.Println("---------------------")
 	re := regexp.MustCompile(`\n(\s*)\|`)
 	dd := re.ReplaceAllString(s, " |")
 
-	fmt.Println(dd)
+	re2 := regexp.MustCompile(`\:(\s*)\|`)
+
+	dd = re2.ReplaceAllString(dd, ":")
+	//fmt.Println(dd)
 
 	patch := parser.File(strings.Split(dd, "\n"))
 

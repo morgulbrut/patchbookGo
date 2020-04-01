@@ -33,10 +33,6 @@ func File(s []string) patch.Patch {
 		if strings.HasPrefix(line, SETTINGS) {
 			p.Sets = append(p.Sets, settings(line))
 		}
-		if strings.HasPrefix(line, SETTING) {
-			pos := len(p.Sets) - 1
-			p.Sets[pos].Sets = append(p.Sets[pos].Sets, setting(line))
-		}
 	}
 	return p
 }
