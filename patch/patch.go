@@ -1,4 +1,4 @@
-package parser
+package patch
 
 type Patch struct {
 	Conns []Connection
