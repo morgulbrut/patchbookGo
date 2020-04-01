@@ -6,6 +6,9 @@ import (
 	"io/ioutil"
 	"log"
 	"regexp"
+	"strings"
+
+	"github.com/morgulbrut/patchbookGo/parser"
 )
 
 var f string // filename to open
@@ -26,14 +29,8 @@ func main() {
 	dd := re.ReplaceAllString(s, " |")
 
 	fmt.Println(dd)
-	/*
-		lines, err := helferlein.ReadLines(f)
-		if err != nil {
-			log.Fatalf("readLines: %s", err)
-		}
-	*/
 
-	//patch := parser.File(lines)
+	patch := parser.File(strings.Split(dd, "\n"))
 
-	//fmt.Println(patch)
+	fmt.Println(patch)
 }
