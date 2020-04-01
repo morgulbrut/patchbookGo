@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/morgulbrut/patchbookGo/patch"
@@ -19,7 +18,6 @@ func settings(s string) patch.Settings {
 
 		}
 	}
-	fmt.Println("set:", set)
 	return set
 }
 
