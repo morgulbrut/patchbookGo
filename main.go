@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/morgulbrut/patchbookGo/parser"
+	"github.com/morgulbrut/patchbookGo/targets"
 )
 
 var f string // filename to open
@@ -36,4 +37,6 @@ func main() {
 	patch := parser.File(strings.Split(dd, "\n"))
 
 	fmt.Println(patch)
+
+	targets.Test()
 }
