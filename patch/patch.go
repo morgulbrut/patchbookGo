@@ -1,6 +1,9 @@
 package patch
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type Patch struct {
 	Conns []Connection
@@ -8,7 +11,21 @@ type Patch struct {
 }
 
 func (p Patch) String() string {
-	return fmt.Sprintf("Connections: \n%v \nSettings: \n%v", p.Conns, p.Sets)
+	var sb strings.Builder
+
+	sb.WriteString("\n------------------------\nPatch\n------------------------\n")
+	sb.WriteString("\nConnections:\n")
+	for i, c := range p.Conns {
+		sb.WriteString(fmt.Sprintf("%d\t%s (%s) -> %s (%s), T: %s\n", i+1, c.Source.Device, c.Source.PortName, c.Dest.Device, c.Dest.PortName, c.Type))
+	}
+	sb.WriteString("\nSettings:\n")
+	for i, s := range p.Sets {
+		sb.WriteString(fmt.Sprintf("%d\t%s:\n", i+1, s.Device))
+		for j, t := range s.Sets {
+			sb.WriteString(fmt.Sprintf("\t%d\t%s: %s\n", j+1, t.Parameter, t.Value))
+		}
+	}
+	return sb.String()
 }
 
 type Connection struct {
@@ -17,17 +34,9 @@ type Connection struct {
 	Type   string
 }
 
-func (c Connection) String() string {
-	return fmt.Sprintf("\tSource: %v, Destination: %v, Type: %s \n", c.Source, c.Dest, c.Type)
-}
-
 type Port struct {
 	Device   string
 	PortName string
-}
-
-func (p Port) String() string {
-	return fmt.Sprintf("%s (%s)", p.Device, p.PortName)
 }
 
 type Settings struct {
@@ -35,15 +44,7 @@ type Settings struct {
 	Sets   []Setting
 }
 
-func (s Settings) String() string {
-	return fmt.Sprintf("\n\tDevice: %v \n\t\tSettings: \n%v", s.Device, s.Sets)
-}
-
 type Setting struct {
 	Parameter string
 	Value     string
-}
-
-func (s Setting) String() string {
-	return fmt.Sprintf("\t\t%s = %s\n", s.Parameter, s.Value)
 }

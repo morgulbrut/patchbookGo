@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/morgulbrut/patchbookGo/parser"
-	"github.com/morgulbrut/patchbookGo/targets"
 )
 
 var f string // filename to open
@@ -24,19 +23,15 @@ func main() {
 	}
 	s := string(buf)
 
-	//fmt.Println(s)
-	//fmt.Println("---------------------")
 	re := regexp.MustCompile(`\n(\s*)\|`)
-	dd := re.ReplaceAllString(s, " |")
+	s = re.ReplaceAllString(s, " |")
 
 	re2 := regexp.MustCompile(`\:(\s*)\|`)
+	s = re2.ReplaceAllString(s, ":")
 
-	dd = re2.ReplaceAllString(dd, ":")
-	//fmt.Println(dd)
-
-	patch := parser.File(strings.Split(dd, "\n"))
+	patch := parser.File(strings.Split(s, "\n"))
 
 	fmt.Println(patch)
 
-	targets.Test()
+	//targets.Test()
 }
