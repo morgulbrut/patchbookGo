@@ -42,7 +42,7 @@ func connection(s string) patch.Connection {
 func port(s string) patch.Port {
 	var p patch.Port
 	np := strings.Split(s, "(")
-	p.Device = strings.Trim(np[0], " )")
+	p.Name = strings.Trim(np[0], " )")
 	p.PortName = strings.Trim(np[1], " )")
 	return p
 }

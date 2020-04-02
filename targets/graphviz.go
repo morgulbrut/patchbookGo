@@ -3,8 +3,20 @@ package targets
 import (
 	"fmt"
 
+	"github.com/morgulbrut/patchbookGo/patch"
+
 	"github.com/emicklei/dot"
 )
+
+type Graph struct {
+	Devices []Device
+	Conns   []patch.Connection
+}
+
+type Device struct {
+	Name string
+	Sets []patch.Setting
+}
 
 func Test() {
 	g := dot.NewGraph(dot.Directed)

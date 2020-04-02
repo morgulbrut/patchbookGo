@@ -7,7 +7,7 @@ import (
 
 type Patch struct {
 	Conns []Connection
-	Sets  []Settings
+	Sets  []Device
 }
 
 func (p Patch) String() string {
@@ -16,11 +16,11 @@ func (p Patch) String() string {
 	sb.WriteString("\n------------------------\nPatch\n------------------------\n")
 	sb.WriteString("\nConnections:\n")
 	for i, c := range p.Conns {
-		sb.WriteString(fmt.Sprintf("%d\t%s (%s) -> %s (%s), T: %s\n", i+1, c.Source.Device, c.Source.PortName, c.Dest.Device, c.Dest.PortName, c.Type))
+		sb.WriteString(fmt.Sprintf("%d\t%s (%s) -> %s (%s), T: %s\n", i+1, c.Source.Name, c.Source.PortName, c.Dest.Name, c.Dest.PortName, c.Type))
 	}
 	sb.WriteString("\nSettings:\n")
 	for i, s := range p.Sets {
-		sb.WriteString(fmt.Sprintf("%d\t%s:\n", i+1, s.Device))
+		sb.WriteString(fmt.Sprintf("%d\t%s:\n", i+1, s.Name))
 		for j, t := range s.Sets {
 			sb.WriteString(fmt.Sprintf("\t%d\t%s: %s\n", j+1, t.Parameter, t.Value))
 		}
@@ -35,13 +35,15 @@ type Connection struct {
 }
 
 type Port struct {
-	Device   string
+	Name     string
 	PortName string
 }
 
-type Settings struct {
-	Device string
-	Sets   []Setting
+type Device struct {
+	Name    string
+	Inputs  []string
+	Outputs []string
+	Sets    []Setting
 }
 
 type Setting struct {

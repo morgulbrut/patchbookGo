@@ -6,19 +6,19 @@ import (
 	"github.com/morgulbrut/patchbookGo/patch"
 )
 
-func settings(s string) patch.Settings {
-	var set patch.Settings
+func settings(s string) patch.Device {
+	var d patch.Device
 	s = strings.TrimPrefix(s, SETTINGS)
 	s = strings.TrimSpace(s)
 	if !(strings.HasSuffix(s, ":")) {
 		ds := strings.Split(s, NAME_DEL)
-		set.Device = strings.TrimSpace(ds[0])
+		d.Name = strings.TrimSpace(ds[0])
 		for _, st := range strings.Split(ds[1], SETTING) {
-			set.Sets = append(set.Sets, setting(st))
+			d.Sets = append(d.Sets, setting(st))
 
 		}
 	}
-	return set
+	return d
 }
 
 func setting(s string) patch.Setting {
