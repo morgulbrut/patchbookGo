@@ -20,8 +20,8 @@ const SETTING = "|"
 const NAME_DEL = ":"
 const PARAM_DEL = "="
 
-func File(s []string) patch.Patch {
-	var p patch.Patch
+func File(s []string) patch.Root {
+	var p patch.Root
 
 	color256.PrintHiOrange("Parsing...:")
 	for i, line := range s {
