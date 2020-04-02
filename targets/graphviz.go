@@ -19,6 +19,11 @@ func GraphvizTest() {
 	fmt.Println(g.String())
 }
 
-func Graphviz(p patch.Patch) {
+func Graphviz(p patch.Root) string {
+	g := dot.NewGraph(dot.Directed)
+	g.Attr("rankdir", "LR")
+	g.Attr("ordering", "out")
+	g.Attr("splines", "polyline")
 
+	return fmt.Sprintf(g.String())
 }

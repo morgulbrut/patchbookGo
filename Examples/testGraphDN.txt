@@ -1,0 +1,31 @@
+digraph G{
+rankdir = BT;
+splines = polyline;
+ordering=out;
+aethervco[label="{ {<_cv> CV}|{{AETHER VCO}|{Lfo Freq = 5\nLfo Pwm = 7}}| {<_pulse> PULSE | <_sub1> SUB 1 | <_sub2> SUB 2}}"  shape=Mrecord]
+audiointerface[label="{ {<_in3> IN 3}|AUDIO INTERFACE| {}}"  shape=Mrecord]
+maths[label="{ {<_ch1trigger> CH 1 TRIGGER | <_ch4trigger> CH 4 TRIGGER}|MATHS| {<_ch1> CH 1 | <_ch4> CH 4}}"  shape=Mrecord]
+metropolis[label="{ {}|METROPOLIS| {<_gate> GATE | <_pitch> PITCH}}"  shape=Mrecord]
+mixer[label="{ {<_ch1> CH1 | <_ch2> CH2 | <_ch3> CH3}|MIXER| {<_output> OUTPUT}}"  shape=Mrecord]
+multifilter[label="{ {<_cv> CV | <_input> INPUT}|MULTIFILTER| {<_lpf> LPF}}"  shape=Mrecord]
+multilfo[label="{ {}|{{MULTILFO}|{Lfo 1 Freq = 3.8\nLfo 1 S&H = 0\nLfo 1 Shape = Sine\nLfo 2 Freq = 1\nLfo 3 Freq = 1}}| {<_lfo1> LFO 1 | <_lfo2triangle> LFO 2 TRIANGLE | <_lfo3triangle> LFO 3 TRIANGLE}}"  shape=Mrecord]
+tides[label="{ {<_clk> CLK | <_shape> SHAPE | <_smoothness> SMOOTHNESS}|{{TIDES}|{Freq = 60%\nPll Mode = True\nSmoothness = 70%}}| {<_bi> BI}}"  shape=Mrecord]
+uvca[label="{ {<_ch1cv> CH1 CV | <_ch1input> CH1 INPUT}|UVCA| {<_ch1output> CH1 OUTPUT}}"  shape=Mrecord]
+z3000[label="{ {<_hsync> HSYNC | <_pwm> PWM}|{{Z3000}|{Freq = 1pm}}| {<_saw> SAW}}"  shape=Mrecord]
+metropolis:_gate:s  -> maths:_ch1trigger:n  [color=red, style=dashed]
+metropolis:_gate:s  -> maths:_ch4trigger:n  [color=red, style=dashed]
+aethervco:_pulse:s  -> mixer:_ch1:n  [style=bold]
+maths:_ch4:s  -> uvca:_ch1cv:n  [color=gray]
+multifilter:_lpf:s  -> uvca:_ch1input:n  [style=bold]
+tides:_bi:s  -> mixer:_ch2:n  [style=bold]
+z3000:_saw:s  -> mixer:_ch3:n  [style=bold]
+aethervco:_sub1:s  -> tides:_clk:n  [style=bold]
+maths:_ch1:s  -> multifilter:_cv:n  [color=gray]
+metropolis:_pitch:s  -> aethervco:_cv:n  [color=blue]
+aethervco:_sub2:s  -> z3000:_hsync:n  [style=bold]
+uvca:_ch1output:s  -> audiointerface:_in3:n  [style=bold]
+mixer:_output:s  -> multifilter:_input:n  [style=bold]
+multilfo:_lfo3triangle:s  -> z3000:_pwm:n  [color=gray]
+multilfo:_lfo2triangle:s  -> tides:_shape:n  [color=gray]
+multilfo:_lfo1:s  -> tides:_smoothness:n  [color=gray]
+}

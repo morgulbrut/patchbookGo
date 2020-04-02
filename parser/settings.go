@@ -14,7 +14,7 @@ func settings(s string) patch.Device {
 		ds := strings.Split(s, NAME_DEL)
 		d.Name = strings.TrimSpace(ds[0])
 		for _, st := range strings.Split(ds[1], SETTING) {
-			d.Sets = append(d.Sets, setting(st))
+			d.Settings = append(d.Settings, setting(st))
 
 		}
 	}

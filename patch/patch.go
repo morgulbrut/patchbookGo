@@ -6,8 +6,8 @@ import (
 )
 
 type Root struct {
-	Conns []Connection
-	Sets  []Device
+	Conns   []Connection
+	Devices []Device
 }
 
 type Connection struct {
@@ -22,10 +22,10 @@ type Port struct {
 }
 
 type Device struct {
-	Name    string
-	Inputs  []string
-	Outputs []string
-	Sets    []Setting
+	Name     string
+	Inputs   []string
+	Outputs  []string
+	Settings []Setting
 }
 
 type Setting struct {
@@ -43,9 +43,9 @@ func (p Root) String() string {
 		sb.WriteString(fmt.Sprintf("%d\t%s (%s) -> %s (%s), T: %s\n", i+1, c.Source.Name, c.Source.PortName, c.Dest.Name, c.Dest.PortName, c.Type))
 	}
 	sb.WriteString("\nSettings:\n")
-	for i, s := range p.Sets {
+	for i, s := range p.Devices {
 		sb.WriteString(fmt.Sprintf("%d\t%s:\n", i+1, s.Name))
-		for j, t := range s.Sets {
+		for j, t := range s.Settings {
 			sb.WriteString(fmt.Sprintf("\t%d\t%s: %s\n", j+1, t.Parameter, t.Value))
 		}
 	}

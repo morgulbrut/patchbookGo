@@ -27,12 +27,14 @@ func File(s []string) patch.Root {
 	for i, line := range s {
 		fmt.Println(i, line)
 		line = strings.TrimSpace(line)
+		if strings.HasPrefix(line, CONN) || strings.HasPrefix(line, SETTINGS) {
+			p.Devices = append(p.Devices, device(line))
+		}
+
 		if strings.HasPrefix(line, CONN) {
 			p.Conns = append(p.Conns, connection(line))
 		}
-		if strings.HasPrefix(line, SETTINGS) {
-			p.Sets = append(p.Sets, settings(line))
-		}
+
 	}
 	return p
 }
