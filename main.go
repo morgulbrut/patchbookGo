@@ -35,4 +35,6 @@ func main() {
 	fmt.Println(patch)
 
 	fmt.Println(targets.Graphviz(patch))
+
+	fmt.Println(targets.GraphvizTest())
 }
