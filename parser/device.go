@@ -33,3 +33,17 @@ func deviceOutput(s string) patch.Device {
 	d.Name = s
 	return d
 }
+
+func portInput(s string) string {
+	s = strings.Split(s, "(")[1]
+	s = strings.Split(s, ")")[0]
+	s = strings.TrimSpace(s)
+	return s
+}
+
+func portOutput(s string) string {
+	s = strings.Split(s, "(")[2]
+	s = strings.Split(s, ")")[0]
+	s = strings.TrimSpace(s)
+	return s
+}

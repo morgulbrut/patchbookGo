@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/morgulbrut/helferlein"
+
 	"github.com/morgulbrut/color256"
 	"github.com/morgulbrut/patchbookGo/patch"
 )
@@ -28,7 +30,6 @@ func File(s []string) patch.Root {
 		fmt.Println(i, line)
 		line = strings.TrimSpace(line)
 
-		// Add new device if not already there
 		if strings.HasPrefix(line, SETTINGS) {
 			dev := deviceSettings(line)
 			found := false
@@ -50,7 +51,6 @@ func File(s []string) patch.Root {
 			}
 		}
 
-		//
 		if strings.HasPrefix(line, CONN) {
 			con := connection(line)
 			p.Conns = append(p.Conns, con)
@@ -66,6 +66,14 @@ func File(s []string) patch.Root {
 			if !found {
 				p.Devices = append(p.Devices, dev)
 			}
+			for i, d := range p.Devices {
+				if d.Name == dev.Name {
+					port := portInput(line)
+					if !(helferlein.Contains(port, p.Devices[i].Inputs)) {
+						p.Devices[i].Inputs = append(p.Devices[i].Inputs, port)
+					}
+				}
+			}
 
 			dev = deviceOutput(line)
 			found = false
@@ -79,17 +87,14 @@ func File(s []string) patch.Root {
 				p.Devices = append(p.Devices, dev)
 			}
 
-			/*
-				for i, d := range p.Devices {
-					if d.Name == dev.Name {
-						sets := settings(line)
-						fmt.Println(sets)
-						for _, s := range sets {
-							p.Devices[i].Settings = append(p.Devices[i].Settings, s)
-						}
+			for i, d := range p.Devices {
+				if d.Name == dev.Name {
+					port := portOutput(line)
+					if !(helferlein.Contains(port, p.Devices[i].Outputs)) {
+						p.Devices[i].Outputs = append(p.Devices[i].Outputs, port)
 					}
-				}*/
-
+				}
+			}
 		}
 
 	}

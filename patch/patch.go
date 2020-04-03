@@ -49,9 +49,15 @@ func (p Root) String() string {
 		}
 		if len(d.Inputs) > 0 {
 			sb.WriteString("\t\tInputs:\n")
+			for i, s := range d.Inputs {
+				sb.WriteString(fmt.Sprintf("\t\t%d\t%s\n", i+1, s))
+			}
 		}
 		if len(d.Outputs) > 0 {
 			sb.WriteString("\t\tOutputs:\n")
+			for i, s := range d.Outputs {
+				sb.WriteString(fmt.Sprintf("\t\t%d\t%s\n", i+1, s))
+			}
 		}
 	}
 
