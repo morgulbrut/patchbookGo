@@ -27,8 +27,31 @@ func File(s []string) patch.Root {
 	for i, line := range s {
 		fmt.Println(i, line)
 		line = strings.TrimSpace(line)
+
+		// Add new device if not allready there
 		if strings.HasPrefix(line, CONN) || strings.HasPrefix(line, SETTINGS) {
-			p.Devices = append(p.Devices, device(line))
+			dev := device(line)
+			found := false
+			for _, d := range p.Devices {
+				if d.Name == dev.Name {
+					found = true
+				}
+			}
+			if !found {
+				p.Devices = append(p.Devices, dev)
+			}
+		}
+
+		// Add setting to devices
+		if strings.HasPrefix(line, SETTINGS) {
+			dev := device(line)
+			for _, d := range p.Devices {
+				if d.Name == dev.Name {
+					sets := settings(line)
+					color256.PrintBgGreen(sets)
+					d.Settings = append(d.Settings, sets...)
+				}
+			}
 		}
 
 		if strings.HasPrefix(line, CONN) {

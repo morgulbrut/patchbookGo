@@ -3,7 +3,6 @@ package parser
 import (
 	"strings"
 
-	"github.com/morgulbrut/color256"
 	"github.com/morgulbrut/patchbookGo/patch"
 )
 
@@ -18,7 +17,8 @@ func device(s string) patch.Device {
 	}
 	//	s = strings.ReplaceAll(s, " ", "")
 	//	s = strings.ToLower(s)
-	color256.PrintBgGreen(s)
+	s = strings.TrimSpace(s)
+	d.Name = s
 
 	return d
 }

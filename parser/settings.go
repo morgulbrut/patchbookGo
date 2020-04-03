@@ -6,7 +6,7 @@ import (
 	"github.com/morgulbrut/patchbookGo/patch"
 )
 
-func settings(s string) patch.Device {
+func settings(s string) []patch.Setting {
 	var d patch.Device
 	s = strings.TrimPrefix(s, SETTINGS)
 	s = strings.TrimSpace(s)
@@ -18,7 +18,7 @@ func settings(s string) patch.Device {
 
 		}
 	}
-	return d
+	return d.Settings
 }
 
 func setting(s string) patch.Setting {
