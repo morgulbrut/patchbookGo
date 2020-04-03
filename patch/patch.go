@@ -38,16 +38,26 @@ func (p Root) String() string {
 	var sb strings.Builder
 
 	sb.WriteString("\n------------------------\nPatch\n------------------------\n")
+	sb.WriteString("\nDevices:\n")
+	for i, d := range p.Devices {
+		sb.WriteString(fmt.Sprintf("%d\t%s:\n", i+1, d.Name))
+		if len(d.Settings) > 0 {
+			sb.WriteString("\t\tSettings:\n")
+			for i, s := range d.Settings {
+				sb.WriteString(fmt.Sprintf("\t\t%d\t%s: %s\n", i+1, s.Parameter, s.Value))
+			}
+		}
+		if len(d.Inputs) > 0 {
+			sb.WriteString("\t\tInputs:\n")
+		}
+		if len(d.Outputs) > 0 {
+			sb.WriteString("\t\tOutputs:\n")
+		}
+	}
+
 	sb.WriteString("\nConnections:\n")
 	for i, c := range p.Conns {
 		sb.WriteString(fmt.Sprintf("%d\t%s (%s) -> %s (%s), T: %s\n", i+1, c.Source.Name, c.Source.PortName, c.Dest.Name, c.Dest.PortName, c.Type))
-	}
-	sb.WriteString("\nSettings:\n")
-	for i, s := range p.Devices {
-		sb.WriteString(fmt.Sprintf("%d\t%s:\n", i+1, s.Name))
-		for j, t := range s.Settings {
-			sb.WriteString(fmt.Sprintf("\t%d\t%s: %s\n", j+1, t.Parameter, t.Value))
-		}
 	}
 	return sb.String()
 }

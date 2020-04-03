@@ -28,9 +28,9 @@ func File(s []string) patch.Root {
 		fmt.Println(i, line)
 		line = strings.TrimSpace(line)
 
-		// Add new device if not allready there
-		if strings.HasPrefix(line, CONN) || strings.HasPrefix(line, SETTINGS) {
-			dev := device(line)
+		// Add new device if not already there
+		if strings.HasPrefix(line, SETTINGS) {
+			dev := deviceSettings(line)
 			found := false
 			for _, d := range p.Devices {
 				if d.Name == dev.Name {
@@ -40,22 +40,56 @@ func File(s []string) patch.Root {
 			if !found {
 				p.Devices = append(p.Devices, dev)
 			}
-		}
-
-		// Add setting to devices
-		if strings.HasPrefix(line, SETTINGS) {
-			dev := device(line)
-			for _, d := range p.Devices {
+			for i, d := range p.Devices {
 				if d.Name == dev.Name {
 					sets := settings(line)
-					color256.PrintBgGreen(sets)
-					d.Settings = append(d.Settings, sets...)
+					for _, s := range sets {
+						p.Devices[i].Settings = append(p.Devices[i].Settings, s)
+					}
 				}
 			}
 		}
 
+		//
 		if strings.HasPrefix(line, CONN) {
-			p.Conns = append(p.Conns, connection(line))
+			con := connection(line)
+			p.Conns = append(p.Conns, con)
+
+			dev := deviceInput(line)
+			found := false
+			for _, d := range p.Devices {
+				if d.Name == dev.Name {
+					found = true
+				}
+			}
+
+			if !found {
+				p.Devices = append(p.Devices, dev)
+			}
+
+			dev = deviceOutput(line)
+			found = false
+			for _, d := range p.Devices {
+				if d.Name == dev.Name {
+					found = true
+				}
+			}
+
+			if !found {
+				p.Devices = append(p.Devices, dev)
+			}
+
+			/*
+				for i, d := range p.Devices {
+					if d.Name == dev.Name {
+						sets := settings(line)
+						fmt.Println(sets)
+						for _, s := range sets {
+							p.Devices[i].Settings = append(p.Devices[i].Settings, s)
+						}
+					}
+				}*/
+
 		}
 
 	}
