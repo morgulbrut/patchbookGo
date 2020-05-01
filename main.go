@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"regexp"
@@ -32,9 +31,13 @@ func main() {
 
 	patch := parser.File(strings.Split(s, "\n"))
 
-	fmt.Println(patch)
+	// fmt.Println(patch)
 
-	fmt.Println(targets.Graphviz(patch))
+	dot := targets.Graphviz(patch)
+	// fmt.Println(targets.Graphviz(patch))
 
-	fmt.Println(targets.GraphvizTest())
+	err = ioutil.WriteFile("patch.txt", []byte(dot), 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
