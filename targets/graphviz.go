@@ -1,6 +1,7 @@
 package targets
 
 import (
+	"regexp"
 	"strings"
 
 	"github.com/morgulbrut/patchbookGo/patch"
@@ -118,20 +119,23 @@ func connection(c patch.Connection) string {
 	return sb.String()
 }
 
-func portName(s string) string {
+func sanString(s string) string {
 	n := strings.ToLower(s)
-	n = strings.ReplaceAll(n, " ", "")
+	re := regexp.MustCompile(`[^a-z0-9]`)
+	return re.ReplaceAllString(n, "")
+}
+
+func portName(s string) string {
+	n := sanString(s)
 	return "_" + n
 }
 
 func tag(s string) string {
-	t := strings.ToLower(s)
-	t = strings.ReplaceAll(t, " ", "")
+	t := sanString(s)
 	return "<_" + t + "> " + s
 }
 
 func nodeName(s string) string {
-	n := strings.ToLower(s)
-	n = strings.ReplaceAll(n, " ", "")
+	n := sanString(s)
 	return n
 }
