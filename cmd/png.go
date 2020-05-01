@@ -57,11 +57,13 @@ func init() {
 func png(args []string) {
 	dotFn := Dot(args)
 	pngFn := strings.Split(dotFn, ".")[0] + ".png"
+	colorlog.Debug("Running dot")
 	cmd := exec.Command("dot", "-Tpng", dotFn)
 	png, err := cmd.Output()
 	if err != nil {
 		colorlog.Fatal(err.Error())
 	}
+	colorlog.Debug("Writing png")
 	err = ioutil.WriteFile(pngFn, []byte(png), 0644)
 	if err != nil {
 		colorlog.Fatal(err.Error())
