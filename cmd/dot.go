@@ -68,9 +68,9 @@ func Dot(args []string) string {
 	} else {
 		outfn = args[1]
 	}
-
 	patch := parser.File(utils.ReadFile(infn))
 	dot := targets.Graphviz(patch)
+	colorlog.Debug("Writing dot")
 	err := ioutil.WriteFile(outfn, []byte(dot), 0644)
 	if err != nil {
 		colorlog.Fatal(err.Error())
