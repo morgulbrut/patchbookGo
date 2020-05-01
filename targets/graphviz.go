@@ -1,61 +1,137 @@
 package targets
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/morgulbrut/patchbookGo/patch"
-
-	"github.com/emicklei/dot"
 )
 
-func GraphvizTest() string {
-	di := dot.NewGraph(dot.Directed)
-	outside := di.Node("Outside")
-
-	// A
-	clusterA := di.Subgraph("Cluster A", dot.ClusterOption{})
-	insideOne := clusterA.Node("one")
-	insideTwo := clusterA.Node("two")
-
-	// B
-	clusterB := di.Subgraph("Cluster B", dot.ClusterOption{})
-	insideThree := clusterB.Node("three")
-	insideFour := clusterB.Node("four")
-
-	// edges
-	outside.Edge(insideFour).Edge(insideOne).Edge(insideTwo).Edge(insideThree).Edge(outside)
-
-	return fmt.Sprintf(di.String())
-}
-
 func Graphviz(p patch.Root) string {
-	g := dot.NewGraph(dot.Directed)
-	g.Attr("rankdir", "LR")
-	g.Attr("ordering", "out")
-	g.Attr("splines", "polyline")
+
+	var sb strings.Builder
+	sb.WriteString("digraph{\n")
+	sb.WriteString("ordering=\"out\";\nrankdir=\"LR\";\nsplines=\"polyline\";\n")
 
 	// Devices
 	for _, d := range p.Devices {
-		//n := strings.ToLower(d.Name)
-		//n = strings.ReplaceAll(n, " ", "")
-		l := label(d)
-		node := g.Node(l)
-		node.Attr("shape", "Mrecord")
-
+		sb.WriteString(synthNode(d))
 	}
 
-	return fmt.Sprintf(g.String())
+	// Connections
+
+	for _, c := range p.Conns {
+		sb.WriteString(connection(c))
+	}
+
+	sb.WriteString("}")
+	return sb.String()
 }
 
 func label(d patch.Device) string {
 	var sb strings.Builder
-	sb.WriteString("{ {")
-	for _, i := range d.Inputs {
-		n := strings.ToLower(i)
-		n = strings.ReplaceAll(n, " ", "")
-		sb.WriteString(fmt.Sprintf("<_%s> %s | ", n, i))
-	}
-	sb.WriteString("} }")
+	sb.WriteString("label=\"{")
+	sb.WriteString(outputs(d.Outputs))
+	sb.WriteString("|")
+	sb.WriteString(settings(d.Settings, d.Name))
+	sb.WriteString("|")
+	sb.WriteString(inputs(d.Inputs))
+	sb.WriteString("}")
 	return sb.String()
+}
+
+func inputs(inps []string) string {
+	var sb strings.Builder
+	sb.WriteString("{")
+	for i, inp := range inps {
+		if i > 0 {
+			sb.WriteString(" | ")
+		}
+		sb.WriteString(tag(inp))
+	}
+	sb.WriteString("}")
+	return sb.String()
+}
+
+func outputs(outps []string) string {
+	var sb strings.Builder
+	sb.WriteString("{")
+	for i, outp := range outps {
+		if i > 0 {
+			sb.WriteString(" | ")
+		}
+		sb.WriteString(tag(outp))
+	}
+	sb.WriteString("}")
+	return sb.String()
+}
+
+func settings(sets []patch.Setting, name string) string {
+	var sb strings.Builder
+	sb.WriteString("{")
+	sb.WriteString("{")
+	sb.WriteString(name)
+	sb.WriteString("}|{")
+	for i, set := range sets {
+		if i > 0 {
+			sb.WriteString("\\n")
+		}
+		sb.WriteString(set.Parameter + " = " + set.Value)
+	}
+	sb.WriteString("}")
+	sb.WriteString("}")
+	return sb.String()
+}
+
+func synthNode(d patch.Device) string {
+	// aethervco[label="{ {<_cv> CV}|{{AETHER VCO}|{Lfo Freq = 5\nLfo Pwm = 7}}| {<_pulse> PULSE | <_sub1> SUB 1 | <_sub2> SUB 2}}"  shape=Mrecord]
+	var sb strings.Builder
+	n := nodeName(d.Name)
+	sb.WriteString(n + "[")
+	sb.WriteString(label(d))
+	sb.WriteString("\" shape=Mrecord]\n")
+	return sb.String()
+}
+
+func connection(c patch.Connection) string {
+	// aethervco:_pulse:e  ->  mixer:_ch1:w  [style=bold]
+
+	linetypes := map[string]string{
+		"CV":      "[color=gray]",
+		"Audio":   "[style=bold]",
+		"Pitch":   "[color=blue]",
+		"Gate":    "[color=red, style=dashed]",
+		"Trigger": "[color=orange, style=dashed]",
+		"Clock":   "[color=purple, style=dashed]",
+	}
+
+	var sb strings.Builder
+	sb.WriteString(nodeName(c.Source.Name))
+	sb.WriteString(":")
+	sb.WriteString(portName(c.Source.PortName))
+	sb.WriteString(":e  -> ")
+	sb.WriteString(nodeName(c.Dest.Name))
+	sb.WriteString(":")
+	sb.WriteString(portName(c.Dest.PortName))
+	sb.WriteString(":w ")
+	sb.WriteString(linetypes[c.Type])
+	sb.WriteString("\n")
+	return sb.String()
+}
+
+func portName(s string) string {
+	n := strings.ToLower(s)
+	n = strings.ReplaceAll(n, " ", "")
+	return "_" + n
+}
+
+func tag(s string) string {
+	t := strings.ToLower(s)
+	t = strings.ReplaceAll(t, " ", "")
+	return "<_" + t + "> " + s
+}
+
+func nodeName(s string) string {
+	n := strings.ToLower(s)
+	n = strings.ReplaceAll(n, " ", "")
+	return n
 }
