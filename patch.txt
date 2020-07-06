@@ -1,0 +1,31 @@
+digraph{
+ordering="out";
+rankdir="LR";
+splines="polyline";
+metropolis[label="{{}|{{Metropolis}|{}}|{<_pitch> Pitch | <_gate> Gate}}" shape=Mrecord]
+aethervco[label="{{<_cv> CV}|{{Aether VCO}|{LFO Freq = 5\nLFO PWM = 7}}|{<_pulse> Pulse | <_sub1> Sub 1 | <_sub2> Sub 2}}" shape=Mrecord]
+maths[label="{{<_ch1trigger> Ch 1 Trigger | <_ch4trigger> Ch 4 Trigger}|{{Maths}|{}}|{<_ch1> Ch 1 | <_ch4> Ch 4}}" shape=Mrecord]
+mixer[label="{{<_ch1> Ch1 | <_ch2> Ch2 | <_ch3> Ch3}|{{Mixer}|{}}|{<_output> Output}}" shape=Mrecord]
+tides[label="{{<_clk> Clk | <_smoothness> Smoothness | <_shape> Shape}|{{Tides}|{PLL Mode = True\nFreq = 60%\nSmoothness = 70%}}|{<_bi> Bi}}" shape=Mrecord]
+z3000[label="{{<_hsync> HSync | <_pwm> PWM}|{{Z3000}|{Freq = 1pm}}|{<_saw> Saw}}" shape=Mrecord]
+multilfo[label="{{}|{{MultiLFO}|{LFO 1 Freq = 3.8\nLFO 1 Shape = Sine\nLFO 1 S&H = 0\nLFO 2 Freq = 1\nLFO 3 Freq = 1}}|{<_lfo1> LFO 1 | <_lfo2triangle> LFO 2 Triangle | <_lfo3triangle> LFO 3 Triangle}}" shape=Mrecord]
+multifilter[label="{{<_cv> CV | <_input> Input}|{{Multifilter}|{}}|{<_lpf> LPF}}" shape=Mrecord]
+uvca[label="{{<_ch1cv> Ch1 CV | <_ch1input> Ch1 Input}|{{uVCA}|{}}|{<_ch1output> Ch1 Output}}" shape=Mrecord]
+audiointerface[label="{{<_in3> In 3}|{{AUDIO INTERFACE}|{}}|{}}" shape=Mrecord]
+metropolis:_pitch:e  -> aethervco:_cv:w [color=blue]
+metropolis:_gate:e  -> maths:_ch1trigger:w [color=red, style=dashed]
+metropolis:_gate:e  -> maths:_ch4trigger:w [color=red, style=dashed]
+aethervco:_pulse:e  -> mixer:_ch1:w [style=bold]
+aethervco:_sub1:e  -> tides:_clk:w [style=bold]
+tides:_bi:e  -> mixer:_ch2:w [style=bold]
+aethervco:_sub2:e  -> z3000:_hsync:w [style=bold]
+z3000:_saw:e  -> mixer:_ch3:w [style=bold]
+multilfo:_lfo1:e  -> tides:_smoothness:w [color=gray]
+multilfo:_lfo2triangle:e  -> tides:_shape:w [color=gray]
+multilfo:_lfo3triangle:e  -> z3000:_pwm:w [color=gray]
+maths:_ch1:e  -> multifilter:_cv:w [color=gray]
+maths:_ch4:e  -> uvca:_ch1cv:w [color=gray]
+mixer:_output:e  -> multifilter:_input:w [style=bold]
+multifilter:_lpf:e  -> uvca:_ch1input:w [style=bold]
+uvca:_ch1output:e  -> audiointerface:_in3:w [style=bold]
+}
